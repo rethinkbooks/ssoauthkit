@@ -322,7 +322,15 @@
 	
 	// Check for pin
 	NSString *pin = [_authorizationView stringByEvaluatingJavaScriptFromString:@"document.getElementById('oauth_pin').innerText"];
-	if ([pin length] == 7) {
+    pin = [pin stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"\\b\\d{7}\\b"
+                                                                           options:NSRegularExpressionSearch
+                                                                             error:nil];
+    NSRange pinRange = [regex rangeOfFirstMatchInString:pin
+                                                options:0
+                                                  range:NSMakeRange(0, [pin length])];
+	if (pinRange.length == 7) {
+        pin = [pin substringWithRange:pinRange];
 		[self _verifyAccessTokenWithPin:pin];
 		return;
 	}

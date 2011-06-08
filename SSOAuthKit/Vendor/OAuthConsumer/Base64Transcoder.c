@@ -184,15 +184,10 @@ for (; theInIndex < inInputDataSize; )
 	theSextet = kBase64DecodeTable[theCurrentInputOctet];
 	if (theSextet == -1)
 		break;
-	while (theSextet == -2)
+	if (theSextet == -2 || theSextet == -3 )
 		{
-		theCurrentInputOctet = theInPtr[++theInIndex];
-		theSextet = kBase64DecodeTable[theCurrentInputOctet];
-		}
-	while (theSextet == -3)
-		{
-		theCurrentInputOctet = theInPtr[++theInIndex];
-		theSextet = kBase64DecodeTable[theCurrentInputOctet];
+		++theInIndex;
+        continue;
 		}
 	if (theSequence == 0)
 		{

@@ -6,6 +6,8 @@
 //  Copyright 2010 Sam Soffes, Inc. All rights reserved.
 //
 
+#import <Foundation/Foundation.h>
+
 @interface SSOAConsumer : NSObject <NSCoding, NSCopying> {
 
 	NSString *key;

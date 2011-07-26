@@ -6,6 +6,8 @@
 //  Copyright 2009 Sam Soffes, Inc. All rights reserved.
 //
 
+#import <Foundation/Foundation.h>
+
 @interface NSURL (OAuthString)
 
 - (NSString *)OAuthString;

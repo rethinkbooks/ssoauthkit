@@ -33,16 +33,6 @@
 }
 
 
-- (void)setToken:(SSOAToken *)aToken {
-	if (aToken == token) {
-		return;
-	}
-	
-	[token release];
-	token = [aToken retain];
-}
-
-
 - (void)buildRequestHeaders {
 	[super buildRequestHeaders];
 	

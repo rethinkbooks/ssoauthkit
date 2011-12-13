@@ -31,16 +31,6 @@
 }
 
 
-- (void)setToken:(SSOAToken *)aToken {
-	if (aToken == token) {
-		return;
-	}
-	
-	[token release];
-	token = [aToken retain];
-}
-
-
 - (NSString *)encodeURL:(NSString *)string {
 	NSString *newString = NSMakeCollectable([(NSString *)CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault, (CFStringRef)string, NULL, CFSTR(":/?#[]@!$ &'()*+,;=\"<>%{}|\\^~`"), CFStringConvertNSStringEncodingToEncoding(NSUTF8StringEncoding)) autorelease]);
 	if (newString) {

@@ -11,5 +11,6 @@
 @interface NSURL (OAuthString)
 
 - (NSString *)OAuthString;
+- (NSDictionary *)queryDictionary;
 
 @end

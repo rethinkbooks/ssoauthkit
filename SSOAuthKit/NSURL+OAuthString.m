@@ -30,4 +30,14 @@
     return [[NSString stringWithFormat:@"%@://%@%@%@", lowercaseScheme, [self host], port, [self path]] lowercaseString];
 }
 
+- (NSDictionary *)queryDictionary {
+    NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
+    for (NSString *param in [[self query] componentsSeparatedByString:@"&"]) {
+        NSArray *elts = [param componentsSeparatedByString:@"="];
+        if([elts count] < 2) continue;
+        [params setObject:[elts objectAtIndex:1] forKey:[elts objectAtIndex:0]];
+    }
+    return params;
+}
+
 @end

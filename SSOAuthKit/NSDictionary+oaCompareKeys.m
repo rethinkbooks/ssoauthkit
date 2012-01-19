@@ -11,7 +11,7 @@
 @implementation NSDictionary (oaCompareKeys)
 
 - (NSComparisonResult)oaCompareKeys:(NSDictionary *)other {
-	return [[self objectForKey:@"key"] compare:[other objectForKey:@"key"]];
+    return [[self objectForKey:@"key"] compare:[other objectForKey:@"key"]];
 }
 
 @end

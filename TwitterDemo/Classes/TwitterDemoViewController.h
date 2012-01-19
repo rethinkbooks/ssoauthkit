@@ -10,7 +10,7 @@
 
 @interface TwitterDemoViewController : UIViewController <SSTwitterOAuthViewControllerDelegate> {
 
-	UILabel *userLabel;
+    UILabel *userLabel;
 }
 
 - (void)login:(id)sender;

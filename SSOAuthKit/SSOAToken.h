@@ -9,7 +9,7 @@
 #import "SSOAConsumer.h"
 
 @interface SSOAToken : SSOAConsumer {
-	
+
 }
 
 - (id)initWithUserDefaultsUsingServiceProviderName:(NSString *)provider prefix:(NSString *)prefix;

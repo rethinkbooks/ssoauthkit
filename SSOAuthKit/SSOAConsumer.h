@@ -10,8 +10,8 @@
 
 @interface SSOAConsumer : NSObject <NSCoding, NSCopying> {
 
-	NSString *key;
-	NSString *secret;
+    NSString *key;
+    NSString *secret;
 }
 
 @property (nonatomic, copy) NSString *key;

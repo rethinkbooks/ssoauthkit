@@ -10,11 +10,11 @@
 
 @class SSOAToken;
 
-@interface SSOAFormRequest : ASIFormDataRequest {
-	
-	SSOAToken *token;
-}
+@interface SSOAFormRequest : ASIFormDataRequest
 
+@property (nonatomic, retain) NSString *consumerKey;
+@property (nonatomic, retain) NSString *consumerSecret;
+@property (nonatomic, retain) NSURL *callbackURL;
 @property (copy) SSOAToken *token;
 
 @end

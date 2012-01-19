@@ -8,17 +8,22 @@
 
 #import "SSOARequest.h"
 #import "SSOAToken.h"
-#import "SSOAuthKitConfiguration.h"
 #import "OAHMAC_SHA1SignatureProvider.h"
 #import "NSURL+OAuthString.h"
 #import <SSToolkit/NSString+SSToolkitAdditions.h>
 
 @implementation SSOARequest
 
+@synthesize consumerKey;
+@synthesize consumerSecret;
+@synthesize callbackURL;
 @synthesize token;
 
 - (void)dealloc {
 	self.token = nil;
+    self.callbackURL = nil;
+    self.consumerSecret = nil;
+    self.consumerKey = nil;
 	[super dealloc];
 }
 
@@ -43,7 +48,7 @@
 - (void)buildRequestHeaders {
 	[super buildRequestHeaders];
 	
-	if ([SSOAuthKitConfiguration consumerKey] == nil || [SSOAuthKitConfiguration consumerSecret] == nil) {
+	if (!self.consumerKey || !self.consumerSecret) {
 		return;
 	}
 	
@@ -62,12 +67,15 @@
 	// OAuth Spec, Section 9.1.1 "Normalize Request Parameters"
 	// Build a sorted array of both request parameters and OAuth header parameters
 	NSMutableArray *parameterPairs = [[NSMutableArray alloc] initWithObjects:
-									  [NSDictionary dictionaryWithObjectsAndKeys:[SSOAuthKitConfiguration consumerKey], @"value", @"oauth_consumer_key", @"key", nil],
+									  [NSDictionary dictionaryWithObjectsAndKeys:self.consumerKey, @"value", @"oauth_consumer_key", @"key", nil],
 									  [NSDictionary dictionaryWithObjectsAndKeys:[signatureProvider name], @"value", @"oauth_signature_method", @"key", nil],
 									  [NSDictionary dictionaryWithObjectsAndKeys:timestamp, @"value", @"oauth_timestamp", @"key", nil],
 									  [NSDictionary dictionaryWithObjectsAndKeys:nonce, @"value", @"oauth_nonce", @"key", nil],
 									  [NSDictionary dictionaryWithObjectsAndKeys:@"1.0", @"value", @"oauth_version", @"key", nil],
 									  nil];
+    if (self.callbackURL) {
+        [parameterPairs addObject:[NSDictionary dictionaryWithObjectsAndKeys:[self.callbackURL absoluteString], @"value", @"oauth_callback", @"key", nil]];
+    }
 	
 	if ([token.key isEqualToString:@""] == NO) {
 		[parameterPairs addObject:[NSDictionary dictionaryWithObject:token.key forKey:@"oauth_token"]];
@@ -95,7 +103,7 @@
 	// Sign
 	// Secrets must be urlencoded before concatenated with '&'
 	NSString *signature = [signatureProvider signClearText:signatureBaseString withSecret:
-						   [NSString stringWithFormat:@"%@&%@", [[SSOAuthKitConfiguration consumerSecret] URLEncodedString], 
+						   [NSString stringWithFormat:@"%@&%@", [self.consumerSecret URLEncodedString], 
 							[token.secret URLEncodedString]]];
 	
 	// Set OAuth headers
@@ -105,13 +113,16 @@
 	}
 	
 	NSString *oauthHeader = [NSString stringWithFormat:@"OAuth oauth_consumer_key=\"%@\", %@oauth_signature_method=\"%@\", oauth_signature=\"%@\", oauth_timestamp=\"%@\", oauth_nonce=\"%@\", oauth_version=\"1.0\"",
-							 [[SSOAuthKitConfiguration consumerKey] URLEncodedString],
+							 [self.consumerKey URLEncodedString],
 							 oauthToken,
 							 [[signatureProvider name] URLEncodedString],
 							 [signature URLEncodedString],
 							 timestamp,
 							 nonce];
-	
+    if (self.callbackURL) {
+        oauthHeader = [oauthHeader stringByAppendingFormat:@", oauth_callback=\"%@\"", [[self.callbackURL absoluteString] URLEncodedString]];
+    }
+
 	// Clean up
 	[signatureProvider release];
 	
